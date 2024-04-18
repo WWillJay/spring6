@@ -1,0 +1,4 @@
+# Project exclude paths
+/spring6-ioc-annotation/target/
+/spring6-ioc-xml/target/
+/spring-first/target/

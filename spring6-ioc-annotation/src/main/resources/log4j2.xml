@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration status="warn" monitorInterval="5">
+    <properties>
+        <property name="LOG_HOME">D:/logs</property>
+    </properties>
+
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="spring6log" />
+            <AppenderRef ref="log" />
+            <AppenderRef ref="rollingFile" />
+        </Root>
+    </Loggers>
+
+    <appenders>
+        <console name="spring6log" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] [%-5level] %c{36}:%L --- %m%n" />
+        </console>
+
+        <File name="log" fileName="${LOG_HOME}/testLog.log">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] %l %c{36} - %m%n" />
+        </File>
+
+        <RollingFile name="rollingFile" fileName="${LOG_HOME}/app.log"
+                     filePattern="E:/logs/$${date:yyyy-MM-dd}/app-%d{yyyy-MM-dd-HH-mm}-%i.log">
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] %l %c{36} - %msg%n" />
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="30" />
+        </RollingFile>
+
+    </appenders>
+
+
+</configuration>

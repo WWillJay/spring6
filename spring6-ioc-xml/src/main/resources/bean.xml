@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="book" class="com.jay.spring6.ioc.xml.bean.Book">
+        <constructor-arg name="bName" value="this is a book"/>
+        <constructor-arg index="1" value="199"/>
+        <constructor-arg name="others">
+            <null/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="user" class="com.jay.spring6.ioc.xml.bean.User">
+        <property name="name" value="Lisa"/>
+        <property name="age" value="16"/>
+        <!-- 设置NULL -->
+        <property name="others1">
+            <null/>
+        </property>
+        <!-- 转义 -->
+        <property name="others2" value="a&lt;b"/>
+        <!-- CDATA节 -->
+        <property name="others3">
+            <value><![CDATA[a>b]]></value>
+        </property>
+
+        <!--对象注入：外部引用-->
+        <property name="book" ref="book"/>
+
+        <!--对象注入：内部bean-->
+        <property name="book2">
+            <bean class="com.jay.spring6.ioc.xml.bean.Book">
+                <property name="BName" value="this is book2"/>
+                <property name="BNum" value="22"/>
+            </bean>
+        </property>
+
+        <!--对象注入：级联，需要先初始化对象-->
+        <property name="book3" ref="book"/>
+        <property name="book3.BName" value="this is book3"/>
+        <property name="book3.BNum" value="33"/>
+
+        <!--数组注入-->
+        <property name="loves">
+            <array>
+                <value>唱</value>
+                <value>跳</value>
+                <value>rap</value>
+            </array>
+        </property>
+
+        <!--集合注入-->
+        <property name="bookList">
+            <list>
+                <ref bean="book"/>
+                <bean class="com.jay.spring6.ioc.xml.bean.Book">
+                    <property name="BName" value="this is list book1"/>
+                    <property name="BNum" value="1"/>
+                </bean>
+            </list>
+        </property>
+        <!--Map注入-->
+        <property name="bookMap">
+            <map>
+                <entry key="k1" value-ref="book"/>
+                <entry key="k2">
+                    <bean class="com.jay.spring6.ioc.xml.bean.Book">
+                        <property name="BName" value="this is Map book1"/>
+                        <property name="BNum" value="1"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+        <property name="utilBookList" ref="utilBookList"/>
+        <property name="utilBookMap" ref="utilBookMap"/>
+
+        <!--p命名空间-->
+        <property name="PBook">
+            <bean class="com.jay.spring6.ioc.xml.bean.Book" p:BName="this is p book" p:BNum="55"/>
+        </property>
+    </bean>
+
+    <util:list id="utilBookList">
+        <ref bean="book"/>
+        <bean class="com.jay.spring6.ioc.xml.bean.Book">
+            <property name="BName" value="this is list book1"/>
+            <property name="BNum" value="1"/>
+        </bean>
+    </util:list>
+    <util:map id="utilBookMap">
+        <entry key="k1" value-ref="book"/>
+        <entry key="k2">
+            <bean class="com.jay.spring6.ioc.xml.bean.Book">
+                <property name="BName" value="this is Map book1"/>
+                <property name="BNum" value="1"/>
+            </bean>
+        </entry>
+    </util:map>
+
+
+
+    <!-- 相同的接口实现，注入异常 -->
+<!--    <bean id="userDao2" class="com.jay.spring6.ioc.xml.dao.impl.UserDaoImpl2"/>-->
+    <bean id="userController" class="com.jay.spring6.ioc.xml.controller.UserController"
+          p:userService-ref="userService"/>
+    <bean id="userService" class="com.jay.spring6.ioc.xml.service.impl.UserServiceImpl"
+          p:userDao-ref="userDao"/>
+    <bean id="userDao" class="com.jay.spring6.ioc.xml.dao.impl.UserDaoImpl"/>
+
+</beans>
